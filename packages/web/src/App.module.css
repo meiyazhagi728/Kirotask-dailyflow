@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .brand {
@@ -38,8 +38,8 @@
 
 .navBtn {
   background: transparent;
-  color: rgba(255,255,255,0.65);
-  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 0.375rem 0.875rem;
   border-radius: 6px;
   cursor: pointer;
@@ -49,7 +49,7 @@
 }
 
 .navBtn:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: white;
 }
 
@@ -82,7 +82,7 @@
   background: #e5e7eb;
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
-  font-family: 'SF Mono', Menlo, monospace;
+  font-family: "SF Mono", Menlo, monospace;
   font-size: 0.875em;
   color: #374151;
 }

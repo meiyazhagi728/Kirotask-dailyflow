@@ -1,7 +1,9 @@
 {
   "name": "dailyflow",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "concurrently \"npm run dev -w packages/api\" \"npm run dev -w packages/web\"",
     "build": "npm run build -w packages/api && npm run build -w packages/web",
@@ -16,5 +18,8 @@
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "typescript": "^5.4.2"
+  },
+  "allowScripts": {
+    "better-sqlite3@9.6.0": true
   }
 }

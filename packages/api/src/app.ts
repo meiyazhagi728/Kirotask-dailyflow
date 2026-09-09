@@ -1,11 +1,17 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { exportRouter } from './modules/export/router';
+import { userRouter } from './modules/user/router';
+import { tasksRouter } from './modules/tasks/router';
+import { remindersRouter } from './modules/reminders/router';
+import { habitsRouter } from './modules/habits/router';
 import { ApiResponse } from './types/shared';
+
+// TODO: Uncomment when score module is implemented
+// import { scoreRouter } from './modules/score/router';
 
 /**
  * Creates and configures the Express application.
- * Module routers are registered here after Phase 3 (scaffold-module skill).
  * @returns Configured Express application instance
  */
 export function createApp(): Application {
@@ -14,7 +20,16 @@ export function createApp(): Application {
   app.use(cors({ origin: 'http://localhost:5173' }));
   app.use(express.json());
 
-  // ── Health check ───────────────────────────────────────────────────────────
+  // Request timeout middleware (10 s)
+  app.use((_req: Request, res: Response, next: NextFunction): void => {
+    res.setTimeout(10000, () => {
+      const payload: ApiResponse<null> = { data: null, error: 'Request timeout' };
+      res.status(503).json(payload);
+    });
+    next();
+  });
+
+  // Health check
   app.get('/health', (_req: Request, res: Response): void => {
     const payload: ApiResponse<{ status: string; timestamp: string }> = {
       data: { status: 'ok', timestamp: new Date().toISOString() },
@@ -23,26 +38,25 @@ export function createApp(): Application {
     res.json(payload);
   });
 
-  // ── Export (Phase 5 — requires MCP filesystem configuration) ──────────────
+  // Module routers
+  app.use('/api/v1', userRouter);
   app.use('/api/v1', exportRouter);
+  app.use('/api/v1', tasksRouter);
+  app.use('/api/v1', remindersRouter);
+  app.use('/api/v1', habitsRouter);
+  // app.use('/api/v1', scoreRouter);
 
-  // ── Module routers — uncomment after Phase 3 ──────────────────────────────
-  // app.use('/api/v1/tasks',     tasksRouter);
-  // app.use('/api/v1/reminders', remindersRouter);
-  // app.use('/api/v1/habits',    habitsRouter);
-  // app.use('/api/v1/score',     scoreRouter);
-
-  // ── 404 handler ───────────────────────────────────────────────────────────
+  // 404 handler
   app.use((_req: Request, res: Response): void => {
     const payload: ApiResponse<null> = { data: null, error: 'Route not found' };
     res.status(404).json(payload);
   });
 
-  // ── Global error handler ──────────────────────────────────────────────────
+  // Global error handler
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction): void => {
     console.error(err.stack);
-    const payload: ApiResponse<null> = { data: null, error: err.message };
+    const payload: ApiResponse<null> = { data: null, error: 'Internal server error' };
     res.status(500).json(payload);
   });
 
